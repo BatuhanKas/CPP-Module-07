@@ -1,78 +1,54 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bkas <bkas@student.42kocaeli.com.tr>       +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/26 13:23:42 by bkas              #+#    #+#             */
-/*   Updated: 2024/09/30 16:11:04 by bkas             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-/* **************************** [v] INCLUDES [v] **************************** */
-
+#include <iostream>
 #include "../inc/Array.hpp"
 
-/* **************************** [^] INCLUDES [^] **************************** */
-
-/* **************************** [v] DEFINES [v] **************************** */
-
-#define ARRSIZE 5
-
-/* **************************** [^] DEFINES [^] **************************** */
-
-/* ****************************** [v] MAIN [v] ****************************** */
-
-int main() {
-    int *arr;
-
-    /* ************ [v] MEMORY ALLOCATION [v] ************ */
-    try {
-        arr = new int[ARRSIZE];
-    } catch (exception &e) {
-        cerr << "(New) Memory Error: " << e.what() << endl;
-        return 0;
+#define MAX_VAL 750
+int main(int, char**)
+{
+    Array<int> numbers(MAX_VAL);
+    int* mirror = new int[MAX_VAL];
+    srand(time(NULL));
+    for (int i = 0; i < MAX_VAL; i++)
+    {
+        const int value = rand();
+        numbers[i] = value;
+        mirror[i] = value;
     }
-    /* ************ [^] MEMORY ALLOCATION [^] ************ */
-
-    /* ***************** [v] INTEGER [v] ***************** */
-    try {
-        srand(time(NULL));
-        for (int i = 0; i < ARRSIZE; i++) {
-            arr[i] = (rand() % 10);
-        }
-        Array<int> a(ARRSIZE);
-        a.setElements(arr);
-        a.printElements();
-
-        /* **** [v] Reach Index [v] **** */
-        cout << a[4] << endl;
-        /* **** [^] Reach Index [^] **** */
-    } catch (exception &e) {
-        cerr << e.what() << endl;
+    //SCOPE
+    {
+        Array<int> tmp = numbers;
+        Array<int> test(tmp);
     }
-    /* ***************** [^] INTEGER [^] ***************** */
-
-    delete[] arr;
-
-    try {
-        /* ******** [v] STRING [v] ******** */
+    // mirror[0] = 42;
+    for (int i = 0; i < MAX_VAL; i++)
+    {
+        if (mirror[i] != numbers[i])
         {
-            string str[] = {"ali", "veli", "abc", "cde"};
-            unsigned int size = sizeof(str) / sizeof(str[0]);
-            Array<string> b(size);
-            b.setElements(str);
-            b.printElements();
-
-            /* **** [v] Reach Index [v] **** */
-            cout << b[-3] << endl;
-            /* **** [^] Reach Index [^] **** */
+            std::cerr << "didn't save the same value!!" << std::endl;
+            return 1;
         }
-        /* ******** [^] STRING [^] ******** */
-    } catch (exception &e) {
-        cerr << e.what() << endl;
     }
-}
+    try
+    {
+        numbers[-2] = 0;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    try
+    {
+        numbers[MAX_VAL] = 0;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 
-/* ****************************** [^] MAIN [^] ****************************** */
+    for (int i = 0; i < MAX_VAL; i++)
+    {
+        numbers[i] = rand() % 10;
+    }
+    // numbers.printElements();
+    delete [] mirror;//
+    return 0;
+}
